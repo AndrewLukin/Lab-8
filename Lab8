@@ -64,52 +64,26 @@ LRESULT CALLBACK WinFun(HWND hwnd, UINT message,
 	PAINTSTRUCT ps;
 	switch (message)
 	{
-	case WM_CREATE:
-		pB = (HPEN)GetStockObject(BLACK_PEN);
-
-		pW = (HPEN)GetStockObject(WHITE_PEN);
-
-		break;
-	case WM_RBUTTONDOWN:
+	case WM_LBUTTONDOWN:
 		x2 = x1 = LOWORD(lParam);
 		y2 = y1 = HIWORD(lParam);
 		break;
 	case WM_MOUSEMOVE:
-		if (wParam & MK_RBUTTON) 
-		{
-			hdc = GetDC(hwnd);
-			SelectObject(hdc, pW); 
-			MoveToEx(hdc, x1, y1, (LPPOINT)NULL);
-			LineTo(hdc, x2, y2); 
-			x2 = LOWORD(lParam); 
-			y2 = HIWORD(lParam);
-			SelectObject(hdc, pB); 
-			MoveToEx(hdc, x1, y1, (LPPOINT)NULL);
-			LineTo(hdc, x2, y2);
-			ReleaseDC(hwnd, hdc);
-		}
 		if (wParam & MK_LBUTTON)
 		{
-			int x, y;
-			x = LOWORD(lParam);
-			y = HIWORD(lParam);
+			x1 = LOWORD(lParam);
+			y1 = HIWORD(lParam);
 			hdc = GetDC(hwnd);
-			HPEN pen = CreatePen(PS_DASHDOTDOT, 1, RGB(0, 0, 0));;
-			HBRUSH br = CreateHatchBrush(HS_DIAGCROSS, RGB(200, 200, 255));
+			HPEN pen = CreatePen(PS_DASHDOT, 1, RGB(255, 0, 0));;
+			HBRUSH br = CreateHatchBrush(HS_CROSS, RGB(0, 0, 255));
 			SelectObject(hdc, pen);
 			SelectObject(hdc, br);
-			Rectangle(hdc, x - 50, y - 50, x + 50, y + 50);
+			Rectangle(hdc, x1, y1, x2, y2);
 			DeleteObject(pen);
 			DeleteObject(br);
 			ReleaseDC(hwnd, hdc);
 		}
 		EndPaint(hwnd, &ps);
-		break;
-	case WM_RBUTTONUP: 
-		p = new PrintList;  
-		p->L.x1 = x1; p->L.x2 = x2;
-		p->L.y1 = y1; p->L.y2 = y2;
-		add(pFirst, p);
 		break;
 	case WM_PAINT: 
 		hdc = BeginPaint(hwnd, &ps);
